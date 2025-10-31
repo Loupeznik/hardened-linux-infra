@@ -1,0 +1,15 @@
+# Proxmox connection settings
+proxmox_url          = "https://65.109.98.48:8006/api2/json"
+proxmox_token_id     = "terraform@pve!terraform-token"
+proxmox_token_secret = "your-token-secret-here"
+proxmox_node         = "pve-prod-02"
+
+# SSH key for VM access
+ssh_public_key_file = "~/.ssh/id_ed25519.pub"
+
+# Network settings
+vm_network_bridge = "vnet0"
+vm_gateway        = "10.9.11.0"
+vm_dns_primary    = "8.8.8.8"
+vm_dns_secondary  = "8.8.4.4"
+vm_searchdomain   = "dzarsky.eu"

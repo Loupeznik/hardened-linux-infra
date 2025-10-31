@@ -1,0 +1,43 @@
+# Proxmox Connection Settings
+proxmox_url      = "https://proxmox.example.com:8006/api2/json"
+proxmox_username = "packer@pve!packer-token"
+proxmox_token    = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+proxmox_node     = "pve"
+
+# Storage Configuration
+proxmox_storage_pool = "local-lvm"
+proxmox_iso_storage  = "local"
+
+# VM Template Configuration
+vm_id   = 9000
+vm_name = "ubuntu-24.04-hardened-template"
+
+# VM Resources
+vm_cpu_cores = 2
+vm_cpu_type  = "host"
+vm_memory    = 4096
+vm_disk_size = "80G"
+vm_disk_type = "scsi"
+
+# Network Configuration (for template build)
+vm_network_bridge = "vmbr0"
+vm_network_model  = "virtio"
+vm_ip_address     = "10.0.1.100"
+vm_network_prefix = 24
+vm_gateway        = "10.0.1.1"
+vm_dns_primary    = "8.8.8.8"
+vm_dns_secondary  = "8.8.4.4"
+vm_dns_domain     = "example.com"
+
+# VM Configuration (temporary, only used during template creation)
+vm_hostname       = "ubuntu-template"
+vm_admin_user     = "sysadmin"
+vm_admin_password = "ChangeMe123!TempPassword"
+vm_ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExamplePublicKeyHere your-email@example.com"
+
+# System Settings
+vm_timezone = "UTC"
+
+# ISO Configuration (optional - uses defaults if not specified)
+# iso_url      = "https://releases.ubuntu.com/24.04/ubuntu-24.04.1-live-server-amd64.iso"
+# iso_checksum = "sha256:e240e4b801f7bb68c20d1356b60968ad0c33a41d00d828e74ceb3364a0317be9"

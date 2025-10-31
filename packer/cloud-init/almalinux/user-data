@@ -1,0 +1,65 @@
+#cloud-config
+timezone: ${vm_timezone}
+hostname: ${vm_hostname}
+fqdn: ${vm_hostname}
+manage_etc_hosts: true
+preserve_hostname: false
+
+users:
+  - name: ${vm_admin_user}
+    gecos: System Administrator
+    shell: /bin/bash
+    groups: [wheel]
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: false
+    passwd: ${vm_admin_password_hash}
+    ssh_authorized_keys:
+      - ${vm_ssh_public_key}
+
+disable_root: true
+ssh_pwauth: false
+
+packages:
+  - qemu-guest-agent
+  - cloud-init
+  - cloud-utils-growpart
+  - python3
+  - openssh-server
+
+runcmd:
+  - systemctl enable --now qemu-guest-agent
+  - systemctl enable --now sshd
+  - dnf update -y
+  - timedatectl set-timezone ${vm_timezone}
+  - hostnamectl set-hostname ${vm_hostname}
+  - sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+  - systemctl restart sshd
+  - echo "${vm_admin_user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${vm_admin_user}
+  - chmod 440 /etc/sudoers.d/${vm_admin_user}
+
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: false
+      addresses:
+        - ${vm_ip_address}/${vm_network_prefix}
+      gateway4: ${vm_gateway}
+      nameservers:
+        addresses:
+          - ${vm_dns_primary}
+          - ${vm_dns_secondary}
+        search:
+          - ${vm_dns_domain}
+
+write_files:
+  - path: /etc/sudoers.d/${vm_admin_user}
+    permissions: '0440'
+    content: |
+      ${vm_admin_user} ALL=(ALL) NOPASSWD:ALL
+
+bootcmd:
+  - systemctl enable qemu-guest-agent
+
+final_message: "AlmaLinux cloud-init setup complete after $UPTIME seconds"
